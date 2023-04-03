@@ -1,0 +1,38 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.personal-video-input {
+    display: flex;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.personal-video-input label {
+    margin: 10px 20px;
+    border: 1px solid black;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.exercises {
+    width: 90%;
+    /* display: flex;
+    flex-wrap: wrap; */
+    margin: 0 auto;
+}
+
+.exercise {
+    width: 30%;
+}
+
+.exercise input{
+    margin: 8px 0px;
+}
+
+.options-videos {
+    width: 45%;
+    padding: 5px;
+}

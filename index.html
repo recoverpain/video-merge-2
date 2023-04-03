@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/index.css">
+    <title>App</title>
+</head>
+<body>
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <div class="personal-video-input">
+            <h4>Personal Video: </h4>
+            <label for="personal-video-upload">Upload Video</label>
+            <input id="personal-video-upload" name="personal-video" style="visibility:hidden;" type="file">
+        </div>
+        <br>
+
+        <div class="exercises">
+            <div class="exercise">
+                <h5>Exerice #1 ( from video Library )</h5>
+                <select name="exercise-video[]" class="options-videos" id="exersie-videos-options">
+                    <option value="">Choose Video</option>
+                </select>
+                <br>
+                <input style="width:10%" type="text" placeholder="Sets" name="sets[]">
+                <input style="width:10%" type="text" placeholder="Reps" name="reps[]">
+                <br>
+                <input type="text" placeholder="Note" name="note[]">
+            </div>
+
+            <div class="exercise">
+                <h5>Exerice #2 ( from video Library )</h5>
+                <select name="exercise-video[]" class="options-videos" id="exersie-videos-options">
+                    <option value="">Choose Video</option>
+                </select>
+                <br>
+                <input style="width:10%" type="text" placeholder="Sets" name="sets[]">
+                <input style="width:10%" type="text" placeholder="Reps" name="reps[]">
+                <br>
+                <input type="text" placeholder="Note" name="note[]">
+            </div>
+
+            <div class="exercise">
+                <h5>Exerice #3 ( from video Library )</h5>
+                <select name="exercise-video[]" class="options-videos" id="exersie-videos-options">
+                    <option value="">Choose Video</option>
+                </select>
+                <br>
+                <input style="width:10%" type="text" placeholder="Sets" name="sets[]">
+                <input style="width:10%" type="text" placeholder="Reps" name="reps[]">
+                <br>
+                <input type="text" placeholder="Note" name="note[]">
+            </div>
+
+            <div class="exercise">
+                <h5>Exerice #4 ( from video Library )</h5>
+                <select name="exercise-video[]" class="options-videos" id="exersie-videos-options">
+                    <option value="">Choose Video</option>
+                </select>
+                <br>
+                <input style="width:10%" type="text" placeholder="Sets" name="sets[]">
+                <input style="width:10%" type="text" placeholder="Reps" name="reps[]">
+                <br>
+                <input type="text" placeholder="Note" name="note[]">
+            </div>
+
+            <div class="exercise">
+                <h5>Exerice #5 ( from video Library )</h5>
+                <select name="exercise-video[]" class="options-videos" id="exersie-videos-options">
+                    <option value="">Choose Video</option>
+                </select>
+                <br>
+                <input style="width:10%" type="text" placeholder="Sets" name="sets[]">
+                <input style="width:10%" type="text" placeholder="Reps" name="reps[]">
+                <br>
+                <input type="text" placeholder="Note" name="note[]">
+            </div>
+            <br>
+        </div>
+        <button style="margin-left: 80px;margin-top:10px;" type="submit">Submit</button>
+    </form>
+
+    <div id="data-container"></div>   
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script>
+
+        // jQuery code
+        $(document).ready(function() {
+            $.ajax({
+            url: '/videos', // URL of the server endpoint to fetch the data from
+            method: 'GET',
+            success: function(data) {
+                // Handle the successful response
+                $('.options-videos').append(data.map((option)=>{
+                    return `
+                     <option value="${option}">${option}</option>
+                    `
+                }));
+            },
+            error: function(xhr, status, error) {
+                // Handle the error response
+                console.error(error);
+            }
+            });
+        });
+        
+
+    </script>
+</body>
+</html>
