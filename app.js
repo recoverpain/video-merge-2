@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   
 const upload = multer({ storage: storage })
   
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
@@ -57,44 +57,41 @@ app.post('/upload', upload.single('personal-video'), (req, res) => {
         // selected.push(`./texted_videos/videos/${data[i]['video_name']}`)
         choosen_to_add_video.push({
           'video': `./videos/${data[i]['video_name']}`,
-          'text': `${data[i]['sets']} - ${data[i]['reps']} - ${data[i]['note']}`
+          'text': `${data[i]['sets']} | ${data[i]['reps']} `,
+          'name': i,
+          'exercise': data[i]['note']
         })
       }      
     }
 
     for (let i = 0; i < choosen_to_add_video.length; i++) {
-      textAdder(choosen_to_add_video[i]['video'], choosen_to_add_video[i]['text'])
+      textAdder(choosen_to_add_video[i]['video'], choosen_to_add_video[i]['text'], choosen_to_add_video[i]['name'], choosen_to_add_video[i]['exercise'], res, selected, data)
     }
 
-    setTimeout(() => {
-      fs.readdir(textedVideos, (err, files) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).send('Error reading videos directory');
-        }
-        const videoOptions = files.filter(file => {
-          const extension = path.extname(file);
-          return extension === '.mp4' || extension === '.mov';
-        })   
+    // setTimeout(() => {
+    //   fs.readdir(textedVideos, (err, files) => {
+    //     if (err) {
+    //       console.error(err);
+    //       return res.status(500).send('Error reading videos directory');
+    //     }
+    //     const videoOptions = files.filter(file => {
+    //       const extension = path.extname(file);
+    //       return extension === '.mp4' || extension === '.mov';
+    //     })   
         
-        for (let i = 0; i < data.length; i++) {
-          if(videoOptions[i] != undefined){
-            selected.push(`./texted_videos/videos/${videoOptions[i]}`)
-          }
-        }
+    //     for (let i = 0; i < data.length; i++) {
+    //       if(videoOptions[i] != undefined){
+    //         selected.push(`./texted_videos/videos/${videoOptions[i]}`)
+    //       }
+    //     }
     
-        console.log(selected);
-        videoMerger(selected)
-  
-      });
-    }, 1000);
+    //     console.log(selected);
+    //     // videoMerger(selected, res)
+        
+    //   });
+    // }, 5000);
 
     
-    
-  
-
-
-    // res.download('final.mp4')
 })
 
 app.get('/videos', (req, res) => {
