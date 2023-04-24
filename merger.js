@@ -32,6 +32,16 @@ const videoMerger = (input_videos, res) => {
           });
   
           console.log('All files deleted from folder');
+
+          const folderPath2 = 'uploads/'; // Replace with your folder path
+
+          fs.readdirSync(folderPath2).forEach((file) => {
+            const filePath = path.join(folderPath2, file);
+             fs.unlinkSync(filePath);
+            });
+    
+            console.log('All files deleted from folder');
+
           res.download('final.mp4')
           // res.send("done")
         }, 5000);
