@@ -93,10 +93,11 @@
             url: '/videos', // URL of the server endpoint to fetch the data from
             method: 'GET',
             success: function(data) {
+                console.log('data', data)
                 // Handle the successful response
                 $('.options-videos').append(data.map((option)=>{
                     return `
-                     <option value="${option}">${option}</option>
+                     <option value="${option.id}">${option.name}</option>
                     `
                 }));
             },
@@ -105,8 +106,11 @@
                 console.error(error);
             }
             });
+            
         });
 
     </script>
 </body>
 </html>
+
+

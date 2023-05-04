@@ -1,59 +1,65 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const ffmpeg = require('fluent-ffmpeg');
-
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+const ffmpeg = require("fluent-ffmpeg");
+const ffprobeStatic = require("ffprobe-static");
 ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobeStatic.path);
 
-const videoMerger = (input_videos, res) => {
-    const inputs = input_videos;
-    const output = 'final.mp4';
-    
-    const command = ffmpeg();
-    
-    inputs.forEach((input) => {
-      command.input(input);
+const videoMerger = async (input_videos, res) => {
+  console.log("input videos", input_videos);
+  const inputs = input_videos;
+  const output = path.join(__dirname, "final.mp4");
+
+  const command = ffmpeg();
+
+  inputs.forEach((input) => {
+    command.input(input);
+  });
+
+  try {
+    await new Promise((resolve, reject) => {
+      command
+        .on("error", (err) => {
+          console.log("An error occurred: " + err.message);
+          reject(err);
+        })
+        .on("end", () => {
+          console.log("Joining finished successfully");
+          resolve();
+        })
+        .mergeToFile(output, "./outputs")
+        .videoCodec("libx264")
+        .format("mp4")
+        .audioCodec("aac")
+        .audioBitrate("128k")
+        .outputOptions("-shortest");
+      console.log("Merging process started");
     });
-    
-    command
-      .on('error', (err) => {
-        console.log('An error occurred: ' + err.message);
-      })
-      .on('end', () => {
-        console.log('Joining finished successfully');
 
-        setTimeout(() => {
-          const folderPath = 'texted_videos/videos/'; // Replace with your folder path
-  
-          fs.readdirSync(folderPath).forEach((file) => {
-          const filePath = path.join(folderPath, file);
-           fs.unlinkSync(filePath);
-          });
-  
-          console.log('All files deleted from folder');
+    const folderPath = "texted_videos/videos/";
 
-          const folderPath2 = 'uploads/'; // Replace with your folder path
+    const files1 = await fs.promises.readdir(folderPath);
+    for (const file of files1) {
+      const filePath = path.join(folderPath, file);
+      await fs.promises.unlink(filePath);
+    }
 
-          fs.readdirSync(folderPath2).forEach((file) => {
-            const filePath = path.join(folderPath2, file);
-             fs.unlinkSync(filePath);
-            });
-    
-            console.log('All files deleted from folder');
+    const folderPath2 = "uploads/";
 
-          res.download('final.mp4')
-          // res.send("done")
-        }, 5000);
-      })
-      .mergeToFile(output, './outputs')
-      .videoCodec('libx264')
-      .format('mp4')
-      .audioCodec('aac')
-      .audioBitrate('128k')
-      .outputOptions('-shortest');
+    const files2 = await fs.promises.readdir(folderPath2);
+    for (const file of files2) {
+      const filePath = path.join(folderPath2, file);
+      await fs.promises.unlink(filePath);
+    }
 
-
-}
+    const tempFilePath = path.join(__dirname, "temp_video.mp4");
+    await fs.promises.unlink(tempFilePath);
+    console.log("All files deleted from folder");
+  } catch (err) {
+    console.log("Error in videoMerger function:", err);
+  }
+};
 
 module.exports = videoMerger;
