@@ -14,15 +14,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "canvas": "^2.11.0",
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "ffprobe": "^1.1.2",
+    "ffmpeg-static": "^5.1.0",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
+    "follow-redirects": "^1.15.2",
+    "googleapis": "^76.0.0",
     "imageMagick": "^0.1.2",
     "multer": "^1.4.5-lts.1",
-    "randomstring": "^1.2.3"
+    "randomstring": "^1.2.3",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
   },
   "devDependencies": {
     "gm": "^1.25.0",
