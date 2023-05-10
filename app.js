@@ -129,7 +129,7 @@ app.post("/upload", upload.single("personal-video"), async (req, res) => {
       res.download("final.mp4");
     });
   } catch (err) {
-    reps.status(500).send("An error occurred");
+    res.status(500).send("An error occurred");
   }
 });
 
@@ -146,7 +146,7 @@ app.get("/videos", async (req, res) => {
       q: "mimeType contains 'video/'",
       fields: "nextPageToken, files(id, name, mimeType)",
     });
-
+    console.log("data", response.data.files);
     res.status(200).json(
       response.data.files.map((file) => ({
         id: file.id,
