@@ -10,8 +10,6 @@ const textAdder = require("./textAdder");
 const app = express();
 const path = require("path");
 
-const videosDirectory = path.join(__dirname, "videos");
-const textedVideos = path.join(__dirname, "texted_videos/videos");
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static("uploads"));
@@ -46,7 +44,7 @@ const downloadFile = async (fileId, filePath) => {
 
     // Get the metadata to check the correct mimetype
     const fileMetadata = await drive.files.get({ fileId });
-
+    console.log("metadata", fileMetadata);
     // Download the file
     const response = await drive.files.get(
       { fileId, alt: "media" },
@@ -58,8 +56,8 @@ const downloadFile = async (fileId, filePath) => {
       response.data
         .pipe(fileStream)
         .on("finish", () => {
-          console.log(`File downloaded to ${filePath}`);
-          resolve(filePath);
+          console.log(`File downloaded to ${filePath}`, fileMetadata.data.name);
+          resolve({ filePath, name: fileMetadata.data.name });
         })
         .on("error", (error) => {
           console.error("Error downloading file:", error);
@@ -96,11 +94,12 @@ app.post("/upload", upload.single("personal-video"), async (req, res) => {
       console.log("video", choosen_videos[i]);
       if (choosen_videos[i] !== "") {
         const video = await downloadFile(choosen_videos[i], tempFilePath);
+        console.log("VIDEO", video);
         video &&
           (await textAdder(
-            video,
-            `${sets[i]} | ${reps[i]} `,
-            i,
+            video.filePath,
+            `${sets[i]} sets | ${reps[i]} reps`,
+            video.name,
             note[i],
             res,
             selected,
@@ -129,6 +128,7 @@ app.post("/upload", upload.single("personal-video"), async (req, res) => {
       res.download("final.mp4");
     });
   } catch (err) {
+    console.log("app", err);
     res.status(500).send("An error occurred");
   }
 });
@@ -146,7 +146,6 @@ app.get("/videos", async (req, res) => {
       q: "mimeType contains 'video/'",
       fields: "nextPageToken, files(id, name, mimeType)",
     });
-    console.log("data", response.data.files);
     res.status(200).json(
       response.data.files.map((file) => ({
         id: file.id,
